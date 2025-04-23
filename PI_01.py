@@ -95,7 +95,7 @@ query = """
 
 values = (
     getDtTm(), Litros, KWh, Kgn, Kgr,
-    Tp, Bk, Cm, Cr, Cre, Crn, situacaokwh, situacaolitros, situacaoporc, situation, situacao_geral, 
+    Tp, Bk, Cm, Cr, Cre, Crn, situacaokwh, situacaolitros, situacaoporc, situation, situacao_geral
 )
 
 cursor.execute(query, values)

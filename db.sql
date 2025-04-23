@@ -16,5 +16,5 @@ create table sustentabilidade (
  sit_ener varchar(50),
  sit_agua varchar(50),
  sit_resid varchar(50),
- sit_tran varchar(50));
- sit_geral varchar(50)
+ sit_tran varchar(50),
+ sit_geral varchar(50));
