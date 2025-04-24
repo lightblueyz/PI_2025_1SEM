@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="localhost", #BD-ACD | localhost
-    user="root", #BD180225116 | root
-    password="", #Zvthd8 |
-    database="projeto_pi" #BD180225116 | projeto_pi
+    host="BD-ACD", #BD-ACD | localhost
+    user="BD180225116", #BD180225116 | root
+    password="Zvthd8", #Zvthd8 |
+    database="BD180225116" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -82,8 +82,11 @@ situacaolitros = avaliar(Litros, 150, 200)
 situacaoporc = avaliar(porc, 20, 50)
 situacaokwh = avaliar(KWh, 5, 10)
 
+
+
 situacao_geral = ""
 media_geral = 0
+
 
 
 
@@ -149,6 +152,9 @@ if carona: nsustents.append("Carona")
 cursor.close()
 conn.close()
 
+
+
+os.system("cls")
 
 print("\n" + "=" * 60)
 print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
