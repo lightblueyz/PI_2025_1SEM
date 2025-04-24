@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="BD-ACD", #BD-ACD | localhost
-    user="BD180225116", #BD180225116 | root
-    password="Zvthd8", #Zvthd8 |
-    database="BD180225116" #BD180225116 | projeto_pi
+    host="localhost", #BD-ACD | localhost
+    user="root", #BD180225116 | root
+    password="", #Zvthd8 |
+    database="projeto_pi" #BD180225116 | projeto_pi
 )
 cursor = conn.cursor()
 
@@ -89,36 +89,80 @@ media_geral = 0
 
 query = """
     INSERT INTO sustentabilidade (
-        data_reg, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral
-    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        data_reg, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
 values = (
     getDtTm(), Litros, KWh, Kgn, Kgr,
-    Tp, Bk, Cm, Cr, Cre, Crn, situacaokwh, situacaolitros, situacaoporc, situation, situacao_geral
+    Tp, Bk, Cm, Cr, Cre, Crn
 )
 
 cursor.execute(query, values)
 conn.commit()
 
-print("\n✅ Dados inseridos com sucesso no banco de dados!")
+ultimo_id = cursor.lastrowid
+
+query2 = """
+    INSERT INTO status (
+        id_data, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral
+    ) VALUES (%s, %s, %s, %s, %s, %s)
+"""
+
+values2 = (
+    ultimo_id, situacaokwh, situacaolitros, situacaoporc, situation, situacao_geral
+)
+
+cursor.execute(query2, values2)
+conn.commit()
+
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM sustentabilidade WHERE id = %s", (ultimo_id,))
+sust_data = cursor.fetchone()
+
+cursor.execute("SELECT * FROM status WHERE id_data = %s", (ultimo_id,))
+status_data = cursor.fetchone()
+
+_, _, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona = sust_data
+
+
+_, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral = status_data
+
+
+total_residuos = residuos_r + residuos_nr
+porc = (residuos_nr / total_residuos) * 100 if total_residuos > 0 else 0
+
+
+sustents = []
+nsustents = []
+
+if transporte_p: sustents.append("Transporte Público")
+if bicicleta: sustents.append("Bicicleta")
+if caminhada: sustents.append("Caminhada")
+
+if carro_c: nsustents.append("Carro Comum")
+if carro_e: nsustents.append("Carro Elétrico")
+if carona: nsustents.append("Carona")
+
 
 cursor.close()
 conn.close()
 
 
 print("\n" + "=" * 60)
-print(f"Quantidade de Água gasta por dia: {Litros:.2f} L")
-print(f"   ➜ Situação: {situacaolitros}\n")
-print(f"Quantidade de Energia gasta por dia: {KWh:.2f} kWh")
-print(f"   ➜ Situação: {situacaokwh}\n")
+print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
+print(f"   ➜ Situação: {sit_agua}\n")
+print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
+print(f"   ➜ Situação: {sit_ener}\n")
 print(f"Porcentagem de resíduos não recicláveis: {porc:.2f} %")
-print(f"   ➜ Situação: {situacaoporc}\n")
+print(f"   ➜ Situação: {sit_resid}\n")
 print(f"Meios de Locomoção Sustentáveis: {', '.join(sustents) if sustents else 'Nenhum'}")
 print(f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}")
-print(f"   ➜ Situação: {situation}")
+print(f"   ➜ Situação: {sit_tran}")
 print(f"Média Geral: {porc:.2f} %")
-print(f"   ➜ Situação: {situacaoporc}\n")
+print(f"   ➜ Situação: {sit_geral}\n")
 print("=" * 60)
+
 
 os.system("pause")
