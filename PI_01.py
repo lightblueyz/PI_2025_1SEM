@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="BD-ACD", #BD-ACD | localhost
-    user="BD180225116", #BD180225116 | root
-    password="Zvthd8", #Zvthd8 |
-    database="BD180225116" #BD180225116 | projeto_pi    
+    host="localhost", #BD-ACD | localhost
+    user="root", #BD180225116 | root
+    password="", #Zvthd8 |
+    database="projeto_pi" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -79,14 +79,64 @@ def avaliar(valor, baixo, moderado):
         return "🔴 Baixa Sustentabilidade"
 
 situacaolitros = avaliar(Litros, 150, 200)
-situacaoporc = avaliar(porc, 20, 50)
 situacaokwh = avaliar(KWh, 5, 10)
+situacaoporc = avaliar(porc, 20, 50)
+
 
 
 
 situacao_geral = ""
-media_geral = 0
+media_L = 0
+media_E = 0
+media_R = 0 
 
+media_arr = []
+
+
+if situacaolitros == "🟢 Alta Sustentabilidade": 
+    media_L += 1
+    media_arr.append(media_L)
+elif situacaolitros == "🟡 Sustentabilidade Moderada": 
+    media_L = 0
+    media_arr.append(media_L)
+else: 
+    media_L -=1
+    media_arr.append(media_L) 
+ 
+
+if situacaokwh == "🟢 Alta Sustentabilidade": 
+    media_E += 1
+    media_arr.append(media_E)
+elif situacaokwh == "🟡 Sustentabilidade Moderada": 
+    media_E = 0
+    media_arr.append(media_E)
+else: 
+    media_E -=1
+    media_arr.append(media_E)            
+
+
+if situacaoporc == "🟢 Alta Sustentabilidade": 
+    media_R += 1
+    media_arr.append(media_R)
+elif situacaoporc == "🟡 Sustentabilidade Moderada": 
+    media_R = 0
+    media_arr.append(media_R)
+else: 
+    media_R -=1
+    media_arr.append(media_R)   
+ 
+
+soma_arr = sum(media_arr)
+
+
+if soma_arr > 0: 
+    situacao_geral = ("🟢 Alta Sustentabilidade")
+elif soma_arr < 0: 
+    situacao_geral = ("🔴 Baixa Sustentabilidade")
+else: 
+    situacao_geral =  ("🟡 Sustentabilidade Moderada")       
+   
+    
 
 
 
@@ -156,6 +206,10 @@ conn.close()
 
 os.system("cls")
 
+
+
+
+print (media_arr)
 print("\n" + "=" * 60)
 print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
 print(f"   ➜ Situação: {sit_agua}\n")
@@ -163,11 +217,10 @@ print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
 print(f"   ➜ Situação: {sit_ener}\n")
 print(f"Porcentagem de resíduos não recicláveis: {porc:.2f} %")
 print(f"   ➜ Situação: {sit_resid}\n")
+print(f"   ➜ Média Geral: {sit_geral}\n")
 print(f"Meios de Locomoção Sustentáveis: {', '.join(sustents) if sustents else 'Nenhum'}")
 print(f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}")
 print(f"   ➜ Situação: {sit_tran}")
-print(f"Média Geral: {porc:.2f} %")
-print(f"   ➜ Situação: {sit_geral}\n")
 print("=" * 60)
 
 
