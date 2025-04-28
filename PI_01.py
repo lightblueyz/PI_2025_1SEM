@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="localhost", #BD-ACD | localhost
-    user="root", #BD180225116 | root
-    password="", #Zvthd8 |
-    database="projeto_pi" #BD180225116 | projeto_pi    
+    host="BD-ACD", #BD-ACD | localhost
+    user="BD180225116", #BD180225116 | root
+    password="Zvthd8", #Zvthd8 |
+    database="BD180225116" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -89,6 +89,7 @@ situacao_geral = ""
 media_L = 0
 media_E = 0
 media_R = 0 
+media_T = 0 
 
 media_arr = []
 
@@ -124,6 +125,17 @@ elif situacaoporc == "🟡 Sustentabilidade Moderada":
 else: 
     media_R -=1
     media_arr.append(media_R)   
+
+if situation == "🟢 Alta Sustentabilidade": 
+    media_T += 1
+    media_arr.append(media_T)
+elif situation == "🟡 Sustentabilidade Moderada": 
+    media_T = 0
+    media_arr.append(media_T)
+else: 
+    media_T -=1
+    media_arr.append(media_T)       
+    
  
 
 soma_arr = sum(media_arr)
@@ -208,8 +220,6 @@ os.system("cls")
 
 
 
-
-print (media_arr)
 print("\n" + "=" * 60)
 print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
 print(f"   ➜ Situação: {sit_agua}\n")
@@ -217,10 +227,10 @@ print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
 print(f"   ➜ Situação: {sit_ener}\n")
 print(f"Porcentagem de resíduos não recicláveis: {porc:.2f} %")
 print(f"   ➜ Situação: {sit_resid}\n")
-print(f"   ➜ Média Geral: {sit_geral}\n")
 print(f"Meios de Locomoção Sustentáveis: {', '.join(sustents) if sustents else 'Nenhum'}")
 print(f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}")
-print(f"   ➜ Situação: {sit_tran}")
+print(f"   ➜ Situação: {sit_tran}\n")
+print(f"Média Geral: {sit_geral}")
 print("=" * 60)
 
 
