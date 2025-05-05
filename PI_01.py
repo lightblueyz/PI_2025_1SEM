@@ -30,12 +30,31 @@ Kgn = float(input("Quantidade de Resíduos não recicláveis (Kg): "))
 Kgr = float(input("Quantidade de Resíduos recicláveis (Kg): "))
 
 print("\nMeios de Transporte Utilizados:")
-Tp = int(input("Transporte Público? (1-Sim / 0-Não): "))
+Tp = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
+if Tp > 1 or Tp < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Tp = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
 Bk = int(input("Bicicleta? (1-Sim / 0-Não): "))
+if Bk > 1 or Bk < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Bk = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
 Cm = int(input("Caminhada? (1-Sim / 0-Não): "))
+if Cm > 1 or Cm < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Cm = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
 Cr = int(input("Carro Comum? (1-Sim / 0-Não): "))
+if Cr > 1 or Cr < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Cr = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
 Cre = int(input("Carro Elétrico? (1-Sim / 0-Não): "))
+if Cre > 1 or Cre < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Cre = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
 Crn = int(input("Carona? (1-Sim / 0-Não): "))
+if Crn > 1 or Crn < 0: 
+    print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
+    Crn = int(input("Transporte Público? (1-Sim / 0-Não): ")) 
+
 
 
 sustents = []
@@ -85,100 +104,38 @@ situacaoporc = avaliar(porc, 20, 50)
 
 
 
-situacao_geral = ""
-media_L = 0
-media_E = 0
-media_R = 0 
-media_T = 0 
-
-media_arr = []
+situacao_geral = 0
+sit_geral = 0   
+       
 
 
-if situacaolitros == "🟢 Alta Sustentabilidade": 
-    media_L += 1
-    media_arr.append(media_L)
-elif situacaolitros == "🟡 Sustentabilidade Moderada": 
-    media_L = 0
-    media_arr.append(media_L)
-else: 
-    media_L -=1
-    media_arr.append(media_L) 
- 
-
-if situacaokwh == "🟢 Alta Sustentabilidade": 
-    media_E += 1
-    media_arr.append(media_E)
-elif situacaokwh == "🟡 Sustentabilidade Moderada": 
-    media_E = 0
-    media_arr.append(media_E)
-else: 
-    media_E -=1
-    media_arr.append(media_E)            
-
-
-if situacaoporc == "🟢 Alta Sustentabilidade": 
-    media_R += 1
-    media_arr.append(media_R)
-elif situacaoporc == "🟡 Sustentabilidade Moderada": 
-    media_R = 0
-    media_arr.append(media_R)
-else: 
-    media_R -=1
-    media_arr.append(media_R)   
-
-if situation == "🟢 Alta Sustentabilidade": 
-    media_T += 1
-    media_arr.append(media_T)
-elif situation == "🟡 Sustentabilidade Moderada": 
-    media_T = 0
-    media_arr.append(media_T)
-else: 
-    media_T -=1
-    media_arr.append(media_T)       
-    
- 
-
-soma_arr = sum(media_arr)
-
-
-if soma_arr > 0: 
-    situacao_geral = ("🟢 Alta Sustentabilidade")
-elif soma_arr < 0: 
-    situacao_geral = ("🔴 Baixa Sustentabilidade")
-else: 
-    situacao_geral =  ("🟡 Sustentabilidade Moderada")       
-   
-    
-
-
-
-query = """
+insert_data = """
     INSERT INTO sustentabilidade (
         data_reg, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona
     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 """
 
-values = (
+data_values = (
     getDtTm(), Litros, KWh, Kgn, Kgr,
     Tp, Bk, Cm, Cr, Cre, Crn
 )
 
-cursor.execute(query, values)
+cursor.execute(insert_data, data_values)
 conn.commit()
 
 ultimo_id = cursor.lastrowid
 
-query2 = """
+insert_status = """
     INSERT INTO status (
         id_data, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral
     ) VALUES (%s, %s, %s, %s, %s, %s)
 """
 
-values2 = (
+status_values = (
     ultimo_id, situacaokwh, situacaolitros, situacaoporc, situation, situacao_geral
 )
 
-cursor.execute(query2, values2)
+cursor.execute(insert_status, status_values)
 conn.commit()
 
 
