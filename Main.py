@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="BD-ACD", #BD-ACD | localhost
-    user="BD180225116", #BD180225116 | root
-    password="Zvthd8", #Zvthd8 |
-    database="BD180225116" #BD180225116 | projeto_pi    
+    host="localhost", #BD-ACD | localhost
+    user="root", #BD180225116 | root
+    password="", #Zvthd8 |
+    database="projeto_pi" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -123,6 +123,7 @@ data_values = (
 cursor.execute(insert_data, data_values)
 conn.commit()
 
+
 ultimo_id = cursor.lastrowid
 
 insert_status = """
@@ -137,6 +138,45 @@ status_values = (
 
 cursor.execute(insert_status, status_values)
 conn.commit()
+
+
+
+
+
+cursor.execute("SELECT SUM(energia) FROM sustentabilidade")
+soma_energia = cursor.fetchone()
+cursor.execute("SELECT COUNT(energia) FROM sustentabilidade")
+qtd_energia = cursor.fetchone()
+media_energia = soma_energia[0] / qtd_energia[0]
+
+
+
+
+cursor.execute("SELECT SUM(agua) FROM sustentabilidade")
+soma_agua = cursor.fetchone()
+cursor.execute("SELECT COUNT(agua) FROM sustentabilidade")
+qtd_agua = cursor.fetchone()
+media_agua = soma_agua[0] / qtd_agua[0]
+
+cursor.execute("SELECT SUM(residuos_r) FROM sustentabilidade")
+soma_residuosR= cursor.fetchone()
+cursor.execute("SELECT COUNT(residuos_r) FROM sustentabilidade")
+qtd_residuosR = cursor.fetchone()
+media_residuosR = soma_residuosR[0] / qtd_residuosR[0]
+
+cursor.execute("SELECT SUM(residuos_nr) FROM sustentabilidade")
+soma_residuosNR = cursor.fetchone()
+cursor.execute("SELECT COUNT(residuos_nr) FROM sustentabilidade")
+qtd_residuosNR = cursor.fetchone()
+media_residuosNR = soma_residuosNR[0] / qtd_residuosNR[0]
+
+
+
+situacao_media_litros = avaliar(media_agua, 150, 200)
+situacao_media_kwh = avaliar(media_energia, 5, 10)
+
+
+
 
 
 cursor = conn.cursor()
@@ -173,22 +213,24 @@ conn.close()
 
 
 
+
+
+
 os.system("cls")
-
-
-
-print("\n" + "=" * 60)
+print("=" * 60)
 print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
 print(f"   ➜ Situação: {sit_agua}\n")
 print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
 print(f"   ➜ Situação: {sit_ener}\n")
-print(f"Porcentagem de resíduos não recicláveis: {porc:.2f} %")
+print(f"Porcentagem de resíduos recicláveis: {porc:.2f} %")
 print(f"   ➜ Situação: {sit_resid}\n")
 print(f"Meios de Locomoção Sustentáveis: {', '.join(sustents) if sustents else 'Nenhum'}")
 print(f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}")
 print(f"   ➜ Situação: {sit_tran}\n")
-print(f"Média Geral: {sit_geral}")
+print(f"Média Geral da água: {media_agua:.2f} L")
+print(f"   ➜ Situação: {situacao_media_litros}\n")
+print(f"Média Geral da água: {media_energia:.2f} kWh")
+print(f"   ➜ Situação: {situacao_media_kwh}\n")
 print("=" * 60)
-
 
 os.system("pause")

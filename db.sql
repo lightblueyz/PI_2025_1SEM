@@ -25,6 +25,14 @@ create table status (
  sit_geral varchar(50)
 );
 
+create table media (
+ id_media int primary key auto_increment,
+ media_agua FLOAT,
+ media_energia FLOAT, 
+ media_residuos FLOAT, 
+ media_locomocao varchar(50)
+)
+
 ALTER TABLE status
 ADD CONSTRAINT fk_id
 FOREIGN KEY (id_data) REFERENCES sustentabilidade(id);
