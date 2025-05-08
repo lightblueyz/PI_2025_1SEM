@@ -30,8 +30,9 @@ create table media (
  media_agua FLOAT,
  media_energia FLOAT, 
  media_residuos FLOAT, 
- media_locomocao varchar(50)
 )
+
+
 
 ALTER TABLE status
 ADD CONSTRAINT fk_id

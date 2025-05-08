@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="localhost", #BD-ACD | localhost
-    user="root", #BD180225116 | root
-    password="", #Zvthd8 |
-    database="projeto_pi" #BD180225116 | projeto_pi    
+    host="BD-ACD", #BD-ACD | localhost
+    user="BD180225116", #BD180225116 | root
+    password="Zvthd8", #Zvthd8 |
+    database="BD180225116" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -150,8 +150,6 @@ qtd_energia = cursor.fetchone()
 media_energia = soma_energia[0] / qtd_energia[0]
 
 
-
-
 cursor.execute("SELECT SUM(agua) FROM sustentabilidade")
 soma_agua = cursor.fetchone()
 cursor.execute("SELECT COUNT(agua) FROM sustentabilidade")
@@ -171,9 +169,19 @@ qtd_residuosNR = cursor.fetchone()
 media_residuosNR = soma_residuosNR[0] / qtd_residuosNR[0]
 
 
+if media_residuosR != 0 or media_residuosNR != 0:
+    soma_media = media_residuosR + media_residuosNR
+    porc_media = (media_residuosNR * 100) / soma_media
+else:
+    porc_media = 0
+ 
 
-situacao_media_litros = avaliar(media_agua, 150, 200)
-situacao_media_kwh = avaliar(media_energia, 5, 10)
+
+cursor.execute("UPDATE media SET media_agua = %s, SET media_energia = %s, SET media_residuos = %s WHERE id_media = %s",
+               (media_agua, media_energia, porc_media, 1))
+conn.commit()   
+
+
 
 
 
@@ -185,6 +193,8 @@ sust_data = cursor.fetchone()
 
 cursor.execute("SELECT * FROM status WHERE id_data = %s", (ultimo_id,))
 status_data = cursor.fetchone()
+
+cursor.execute("SELECT * FROM media WHERE ")
 
 _, _, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona = sust_data
 
@@ -215,7 +225,6 @@ conn.close()
 
 
 
-
 os.system("cls")
 print("=" * 60)
 print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
@@ -231,6 +240,8 @@ print(f"Média Geral da água: {media_agua:.2f} L")
 print(f"   ➜ Situação: {situacao_media_litros}\n")
 print(f"Média Geral da água: {media_energia:.2f} kWh")
 print(f"   ➜ Situação: {situacao_media_kwh}\n")
+print(f"Porcentagem Média de resíduos recicláveis: {porc_media:.2f} %")
+print(f"   ➜ Situação: {situacao_media_resid}\n")
 print("=" * 60)
 
 os.system("pause")
