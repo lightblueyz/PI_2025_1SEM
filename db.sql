@@ -29,10 +29,13 @@ create table media (
  id_media int primary key auto_increment,
  media_agua FLOAT,
  media_energia FLOAT, 
- media_residuos FLOAT, 
+ media_residuos FLOAT 
 )
 
 
+select * from sustentabilidade;
+select * from status;
+select * from media;
 
 ALTER TABLE status
 ADD CONSTRAINT fk_id

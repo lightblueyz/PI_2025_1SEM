@@ -11,10 +11,10 @@ def getDtTm():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 conn = mysql.connector.connect(
-    host="BD-ACD", #BD-ACD | localhost
-    user="BD180225116", #BD180225116 | root
-    password="Zvthd8", #Zvthd8 |
-    database="BD180225116" #BD180225116 | projeto_pi    
+    host="localhost", #BD-ACD | localhost
+    user="root", #BD180225116 | root
+    password="", #Zvthd8 |
+    database="projeto_pi" #BD180225116 | projeto_pi    
 )
 cursor = conn.cursor()
 
@@ -116,7 +116,7 @@ insert_data = """
 """
 
 data_values = (
-    getDtTm(), Litros, KWh, Kgn, Kgr,
+    getDtTm(), Litros, KWh, Kgr, Kgn,
     Tp, Bk, Cm, Cr, Cre, Crn
 )
 
@@ -176,8 +176,14 @@ else:
     porc_media = 0
  
 
+soma_media = media_residuosR + media_residuosNR
 
-cursor.execute("UPDATE media SET media_agua = %s, SET media_energia = %s, SET media_residuos = %s WHERE id_media = %s",
+if soma_media > 0:
+    porc_media = (media_residuosNR * 100) / soma_media
+else:
+    porc_media = 0
+
+cursor.execute("UPDATE media SET media_agua = %s, media_energia = %s,  media_residuos = %s WHERE id_media = %s",
                (media_agua, media_energia, porc_media, 1))
 conn.commit()   
 
@@ -194,17 +200,21 @@ sust_data = cursor.fetchone()
 cursor.execute("SELECT * FROM status WHERE id_data = %s", (ultimo_id,))
 status_data = cursor.fetchone()
 
-cursor.execute("SELECT * FROM media WHERE ")
+cursor.execute("SELECT * FROM media WHERE id_media = %s", (1,))
+media_data = cursor.fetchone()
 
 _, _, energia, agua, residuos_r, residuos_nr, transporte_p, bicicleta, caminhada, carro_c, carro_e, carona = sust_data
 
-
 _, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral = status_data
 
+_, media_agua_bd, media_energia_bd, porc_media_bd = media_data
 
 total_residuos = residuos_r + residuos_nr
 porc = (residuos_nr / total_residuos) * 100 if total_residuos > 0 else 0
 
+situacao_media_litros = avaliar(media_agua_bd, 150, 200)
+situacao_media_kwh = avaliar(media_energia_bd, 5, 10)
+situacao_media_resid = avaliar(porc_media_bd, 20, 50)
 
 sustents = []
 nsustents = []
@@ -216,7 +226,6 @@ if caminhada: sustents.append("Caminhada")
 if carro_c: nsustents.append("Carro Comum")
 if carro_e: nsustents.append("Carro Elétrico")
 if carona: nsustents.append("Carona")
-
 
 cursor.close()
 conn.close()
@@ -240,7 +249,7 @@ print(f"Média Geral da água: {media_agua:.2f} L")
 print(f"   ➜ Situação: {situacao_media_litros}\n")
 print(f"Média Geral da água: {media_energia:.2f} kWh")
 print(f"   ➜ Situação: {situacao_media_kwh}\n")
-print(f"Porcentagem Média de resíduos recicláveis: {porc_media:.2f} %")
+print(f"Porcentagem Média de resíduos não recicláveis: {porc_media:.2f} %")
 print(f"   ➜ Situação: {situacao_media_resid}\n")
 print("=" * 60)
 
