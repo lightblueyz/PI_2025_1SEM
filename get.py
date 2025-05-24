@@ -1,20 +1,19 @@
-from server import  conn
-from assessment import avaliar
+from db.server import conn
 import os
 
 
-def listar(ultimo_id, media_agua, media_energia, porc_media):
-
+def listar(id_list):
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM sustentabilidade WHERE id = %s", (ultimo_id,))
+    cursor.execute("SELECT * FROM sustentabilidade WHERE id = %s", (id_list,))
     sust_data = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM status WHERE id_data = %s", (ultimo_id,))
+    cursor.execute("SELECT * FROM status WHERE id_data = %s", (id_list,))
     status_data = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM media WHERE id_media = %s", (1,))
-    media_data = cursor.fetchone()
+    if sust_data is None or status_data is None:
+        print(f"Nenhum dado encontrado para o ID {id_list}.")
+        return  # <- ESSENCIAL!
 
     (
         _,
@@ -31,16 +30,10 @@ def listar(ultimo_id, media_agua, media_energia, porc_media):
         carona,
     ) = sust_data
 
-    _, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral = status_data
-
-    _, media_agua_bd, media_energia_bd, porc_media_bd = media_data
+    _, sit_ener, sit_agua, sit_resid, sit_tran, _ = status_data
 
     total_residuos = residuos_r + residuos_nr
     porc = (residuos_nr / total_residuos) * 100 if total_residuos > 0 else 0
-
-    situacao_media_litros = avaliar(media_agua_bd, 150, 200)
-    situacao_media_kwh = avaliar(media_energia_bd, 5, 10)
-    situacao_media_resid = avaliar(porc_media_bd, 20, 50)
 
     sustents = []
     nsustents = []
@@ -77,10 +70,4 @@ def listar(ultimo_id, media_agua, media_energia, porc_media):
         f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}"
     )
     print(f"   ➜ Situação: {sit_tran}\n")
-    print(f"Média Geral da água: {media_agua:.2f} L")
-    print(f"   ➜ Situação: {situacao_media_litros}\n")
-    print(f"Média Geral da Energia: {media_energia:.2f} kWh")
-    print(f"   ➜ Situação: {situacao_media_kwh}\n")
-    print(f"Porcentagem Média de resíduos não recicláveis: {porc_media:.2f} %")
-    print(f"   ➜ Situação: {situacao_media_resid}\n")
     print("=" * 60)

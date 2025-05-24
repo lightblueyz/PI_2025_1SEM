@@ -26,11 +26,12 @@ create table status (
 );
 
 create table media (
- id_media int primary key auto_increment,
+ id_media int primary key,
  media_agua FLOAT,
  media_energia FLOAT, 
  media_residuos FLOAT 
 )
+insert into media(id_media) values (1);
 
 
 select * from sustentabilidade;
