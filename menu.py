@@ -2,9 +2,9 @@
 import os 
 import time
 from datetime import datetime
-from post import cadastro
-from get import listar
-from get_media import get_media
+from funcions.post import cadastro
+from funcions.get import listar
+from funcions.get_media import get_media
 
 
 def what_more():
