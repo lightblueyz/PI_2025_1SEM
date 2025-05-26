@@ -59,13 +59,8 @@ while i < 1:
 
     elif opcao == 4:
         os.system("cls")
-        try:
-            id_list = int(input("Digite o id dos dados que deseja listar: "))
-        except ValueError:
-            print("ID inválido.")
-            time.sleep(2)
-            continue
-        listar(id_list)
+        
+        listar()
         time.sleep(3)
 
     elif opcao == 5:

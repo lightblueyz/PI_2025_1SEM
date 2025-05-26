@@ -1,52 +1,52 @@
 import os
 from db.server import cursor, conn
-from assessment import avaliar
-
+from funcions.assessment import avaliar
+from funcions.validacao_transporte import (
+    tp_val,
+    bk_val,
+    cm_val,
+    cr_val,
+    cre_val,
+    crn_val,
+)
+from funcions.validacao_parametros import litros_val, kwh_val, kgn_val, kgr_val
 
 os.system("cls")
 
 
+def validacao():
+    while True:
+        try:
+            loop = int(input("Deseja algo mais? (1)SIM | (2)NÃO: "))
+            if loop == 1 or loop == 2:
+                return loop
+            else:
+                print("Opção inválida. Digite 1 para SIM ou 2 para NÃO.")
+        except ValueError:
+            print("Entrada inválida. Digite um número (1 ou 2).")
+
 
 def cadastro(date):
-
     print("=" * 60)
     print(f"{'ANÁLISE DE SUSTENTABILIDADE':^60}")
     print("=" * 60)
     print(f"Data e Hora: {date}")
     print("=" * 60)
 
-    Litros = float(input("Quantidade de Água gasta (L): "))
-    KWh = float(input("Quantidade de Energia Elétrica (kWh): "))
-    Kgn = float(input("Quantidade de Resíduos não recicláveis (Kg): "))
-    Kgr = float(input("Quantidade de Resíduos recicláveis (Kg): "))
+    Litros = litros_val()
+    KWh = kwh_val()
+    Kgn = kgn_val()
+    Kgr = kgr_val()
 
     print("\nMeios de Transporte Utilizados:")
-    Tp = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    if Tp > 1 or Tp < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Tp = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    Bk = int(input("Bicicleta? (1-Sim / 0-Não): "))
-    if Bk > 1 or Bk < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Bk = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    Cm = int(input("Caminhada? (1-Sim / 0-Não): "))
-    if Cm > 1 or Cm < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Cm = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    Cr = int(input("Carro Comum? (1-Sim / 0-Não): "))
-    if Cr > 1 or Cr < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Cr = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    Cre = int(input("Carro Elétrico? (1-Sim / 0-Não): "))
-    if Cre > 1 or Cre < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Cre = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    Crn = int(input("Carona? (1-Sim / 0-Não): "))
-    if Crn > 1 or Crn < 0:
-        print("Inserção incorreta, Apenas 1 (Sim) ou 0 (Não)")
-        Crn = int(input("Transporte Público? (1-Sim / 0-Não): "))
-    
-    
+
+    Tp = tp_val()
+    Bk = bk_val()
+    Cm = cm_val()
+    Cr = cr_val()
+    Cre = cre_val()
+    Crn = crn_val()
+
     sustents = []
     nsustents = []
 
@@ -62,6 +62,7 @@ def cadastro(date):
         nsustents.append("Carro Comum")
     if Crn:
         nsustents.append("Carona")
+
     sust = any([Tp, Bk, Cm, Cre])
     sustn = any([Cr, Crn])
 
@@ -91,7 +92,7 @@ def cadastro(date):
     """
 
     data_values = (date, KWh, Litros, Kgr, Kgn, Tp, Bk, Cm, Cr, Cre, Crn)
-  
+
     cursor.execute(insert_data, data_values)
     conn.commit()
 
@@ -119,34 +120,29 @@ def cadastro(date):
     soma_energia = cursor.fetchone()
     cursor.execute("SELECT COUNT(energia) FROM sustentabilidade")
     qtd_energia = cursor.fetchone()
-    media_energia = soma_energia[0] / qtd_energia[0]
+    media_energia = soma_energia[0] / qtd_energia[0] if qtd_energia[0] else 0
 
     cursor.execute("SELECT SUM(agua) FROM sustentabilidade")
     soma_agua = cursor.fetchone()
     cursor.execute("SELECT COUNT(agua) FROM sustentabilidade")
     qtd_agua = cursor.fetchone()
-    media_agua = soma_agua[0] / qtd_agua[0]
+    media_agua = soma_agua[0] / qtd_agua[0] if qtd_agua[0] else 0
 
     cursor.execute("SELECT SUM(residuos_r) FROM sustentabilidade")
     soma_residuosR = cursor.fetchone()
     cursor.execute("SELECT COUNT(residuos_r) FROM sustentabilidade")
     qtd_residuosR = cursor.fetchone()
-    media_residuosR = soma_residuosR[0] / qtd_residuosR[0]
+    media_residuosR = soma_residuosR[0] / qtd_residuosR[0] if qtd_residuosR[0] else 0
 
     cursor.execute("SELECT SUM(residuos_nr) FROM sustentabilidade")
     soma_residuosNR = cursor.fetchone()
     cursor.execute("SELECT COUNT(residuos_nr) FROM sustentabilidade")
     qtd_residuosNR = cursor.fetchone()
-    media_residuosNR = soma_residuosNR[0] / qtd_residuosNR[0]
-
-    if media_residuosR != 0 or media_residuosNR != 0:
-        soma_media = media_residuosR + media_residuosNR
-        porc_media = (media_residuosNR * 100) / soma_media
-    else:
-        porc_media = 0
+    media_residuosNR = (
+        soma_residuosNR[0] / qtd_residuosNR[0] if qtd_residuosNR[0] else 0
+    )
 
     soma_media = media_residuosR + media_residuosNR
-
     if soma_media > 0:
         porc_media = (media_residuosNR * 100) / soma_media
     else:
@@ -156,9 +152,6 @@ def cadastro(date):
         "UPDATE media SET media_agua = %s, media_energia = %s,  media_residuos = %s WHERE id_media = %s",
         (media_agua, media_energia, porc_media, 1),
     )
-    conn.commit
-    return ultimo_id, media_agua, media_energia, porc_media
-        
+    conn.commit()
 
-     
-    
+    return ultimo_id, media_agua, media_energia, porc_media
