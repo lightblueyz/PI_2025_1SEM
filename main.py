@@ -1,6 +1,7 @@
 # MENU
 import os 
 import time
+from db.server import conn, cursor
 from datetime import datetime
 from funcions.post import cadastro
 from funcions.get import listar
@@ -12,6 +13,8 @@ def what_more():
         try:
             loop = int(input("Deseja algo mais? (1)SIM | (2)NÃO: "))
             if loop == 1 or loop == 2:
+                cursor.close()
+                conn.close()
                 return loop
             else:
                 print("Opção inválida. Digite 1 para SIM ou 2 para NÃO.")
@@ -59,7 +62,6 @@ while i < 1:
 
     elif opcao == 4:
         os.system("cls")
-        
         listar()
         time.sleep(3)
 
@@ -90,6 +92,8 @@ while i < 1:
     if loop == 2:
         os.system("cls")
         print("Obrigado, até a próxima!")
+        cursor.close()
+        conn.close()
         time.sleep(3)
         i += 1
     else:

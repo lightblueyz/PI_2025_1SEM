@@ -72,5 +72,4 @@ def listar():
         print("=" * 60)
         print()
 
-    cursor.close()
-    conn.close()
+    

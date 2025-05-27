@@ -1,4 +1,4 @@
-use projeto_pi2;
+use BD180225116;
 
 
 -- Remove as tabelas, se existirem, na ordem correta (devido às chaves estrangeiras)
