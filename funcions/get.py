@@ -1,5 +1,4 @@
 from db.server import conn
-import os
 
 
 def listar():
@@ -16,7 +15,7 @@ def listar():
     cursor.execute(query)
     registros = cursor.fetchall()
 
-    for i, registro in enumerate(registros, start=1):
+    for i, registro in enumerate(registros):
         (
             _,
             energia,
@@ -72,4 +71,3 @@ def listar():
         print("=" * 60)
         print()
 
-    

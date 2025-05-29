@@ -1,7 +1,7 @@
 def avaliar(valor, baixo, moderado):
     if valor < baixo:
-        return "🟢 Alta Sustentabilidade"
+        return "AltaSustentabilidade"
     elif baixo <= valor <= moderado:
-        return "🟡 Sustentabilidade Moderada"
+        return "SustentabilidadeModerada"
     else:
-        return "🔴 Baixa Sustentabilidade"
+        return "BaixaSustentabilidade"

@@ -1,6 +1,7 @@
 import os
 from db.server import cursor, conn
 from funcions.assessment import avaliar
+from funcions.updatemedia import update_media
 from funcions.validacao_transporte import (
     tp_val,
     bk_val,
@@ -9,7 +10,15 @@ from funcions.validacao_transporte import (
     cre_val,
     crn_val,
 )
-from funcions.validacao_parametros import litros_val, kwh_val, kgn_val, kgr_val
+from funcions.validacao_parametros import (
+    litros_val,
+    kwh_val,
+    kgn_val,
+    kgr_val
+)
+
+
+
 
 os.system("cls")
 
@@ -148,10 +157,6 @@ def cadastro(date):
     else:
         porc_media = 0
 
-    cursor.execute(
-        "UPDATE media SET media_agua = %s, media_energia = %s,  media_residuos = %s WHERE id_media = %s",
-        (media_agua, media_energia, porc_media, 1),
-    )
-    conn.commit()
+    update_media()
 
     return ultimo_id, media_agua, media_energia, porc_media

@@ -6,6 +6,7 @@ from datetime import datetime
 from funcions.post import cadastro
 from funcions.get import listar
 from funcions.get_media import get_media
+from funcions.delete import delete
 
 
 def what_more():
@@ -57,7 +58,8 @@ while i < 1:
 
     elif opcao == 3:
         os.system("cls")
-        print("Função de exclusão")
+        id_remove = int(input("Digite o ID que deseja remover: "))
+        delete(id_remove)
         time.sleep(3)
 
     elif opcao == 4:
