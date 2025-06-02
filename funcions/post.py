@@ -76,11 +76,11 @@ def cadastro(date):
     sustn = any([Cr, Crn])
 
     if sustn and sust:
-        situation = "🟡 Sustentabilidade Moderada"
+        situation = "SustentabilidadeModerada"
     elif sustn and not sust:
-        situation = "🔴 Baixa Sustentabilidade"
+        situation = "BaixaSustentabilidade"
     else:
-        situation = "🟢 Alta Sustentabilidade"
+        situation = "AltaSustentabilidade"
 
     if Kgr != 0 or Kgn != 0:
         soma = Kgr + Kgn
@@ -156,7 +156,7 @@ def cadastro(date):
         porc_media = (media_residuosNR * 100) / soma_media
     else:
         porc_media = 0
-
+    
     update_media()
 
     return ultimo_id, media_agua, media_energia, porc_media

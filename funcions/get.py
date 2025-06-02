@@ -6,7 +6,7 @@ def listar():
 
     query = """
         SELECT 
-            s.id, s.energia, s.agua, s.residuos_r, s.residuos_nr, 
+            s.id, s.data_reg, s.energia, s.agua, s.residuos_r, s.residuos_nr, 
             s.transporte_p, s.bicicleta, s.caminhada, s.carro_c, s.carro_e, s.carona,
             st.sit_ener, st.sit_agua, st.sit_resid, st.sit_tran
         FROM sustentabilidade s
@@ -17,7 +17,8 @@ def listar():
 
     for i, registro in enumerate(registros):
         (
-            _,
+            id,
+            data_reg,
             energia,
             agua,
             residuos_r,
@@ -54,7 +55,8 @@ def listar():
             nsustents.append("Carona")
 
         print("=" * 60)
-        print(f"Registro #{i}")
+        print(f"Registro #{id}")
+        print(f"Data: {data_reg}")
         print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
         print(f"   ➜ Situação: {sit_agua}\n")
         print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
