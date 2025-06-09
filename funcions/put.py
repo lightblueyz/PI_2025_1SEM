@@ -1,5 +1,6 @@
 import os
 import time
+from criptografia.Criptografia import Cypher
 from db.server import conn, cursor
 from funcions.assessment import avaliar
 
@@ -43,17 +44,25 @@ def atualizar_status(id_):
 
     sit_geral = 0
 
+    originallitros = sit_agua
+    litroscripto = Cypher(originallitros)
+    originalenergia = sit_energia
+    energiacripto = Cypher(originalenergia)
+    originalresiduos = sit_resid
+    residuoscripto = Cypher(originalresiduos)
+    originaltrans = sit_tran
+    transcripto = Cypher(originaltrans)
+
     cursor.execute(
         """
         UPDATE status
         SET sit_ener = %s,
             sit_agua = %s,
             sit_resid = %s,
-            sit_tran = %s,
-            sit_geral = %s
+            sit_tran = %s
         WHERE id_data = %s
         """,
-        (sit_energia, sit_agua, sit_resid, sit_tran, sit_geral, id_),
+        (energiacripto, litroscripto, residuoscripto, transcripto, id_),
     )
     conn.commit()
 
