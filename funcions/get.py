@@ -1,4 +1,5 @@
 from db.server import conn
+from criptografia.Criptografia import Decypher
 
 
 def listar():
@@ -54,22 +55,39 @@ def listar():
         if carona:
             nsustents.append("Carona")
 
+        litroscripto = Decypher(sit_agua)
+        energiacripto = Decypher(sit_ener)
+        residuoscripto = Decypher(sit_resid)
+        transcripto = Decypher(sit_tran)
+
+        def conversor(param):
+            if param == "BAIXASUSTENTABILIDADE":
+                return "Sustentabilidade Baixa"
+            elif param == "SUSTENTABILIDADEMODERADA":
+                return "Sustentabilidade Moderada"
+            elif param == "ALTASUSTENTABILIDADE":
+                return "Sustentabilidade Alta"  
+
+        litrosconvert = conversor(litroscripto)
+        energiaconvert = conversor(energiacripto)
+        residuosconvert = conversor(residuoscripto)
+        transconvert = conversor(transcripto)
+
         print("=" * 60)
         print(f"Registro #{id}")
         print(f"Data: {data_reg}")
         print(f"Quantidade de Água gasta por dia: {agua:.2f} L")
-        print(f"   ➜ Situação: {sit_agua}\n")
+        print(f"   ➜ Situação: {litrosconvert}\n")
         print(f"Quantidade de Energia gasta por dia: {energia:.2f} kWh")
-        print(f"   ➜ Situação: {sit_ener}\n")
+        print(f"   ➜ Situação: {energiaconvert}\n")
         print(f"Porcentagem de resíduos recicláveis: {porc:.2f} %")
-        print(f"   ➜ Situação: {sit_resid}\n")
+        print(f"   ➜ Situação: {residuosconvert}\n")
         print(
             f"Meios de Locomoção Sustentáveis: {', '.join(sustents) if sustents else 'Nenhum'}"
         )
         print(
             f"Meios de Locomoção Não Sustentáveis: {', '.join(nsustents) if nsustents else 'Nenhum'}"
         )
-        print(f"   ➜ Situação: {sit_tran}\n")
+        print(f"   ➜ Situação: {transconvert}\n")
         print("=" * 60)
         print()
-

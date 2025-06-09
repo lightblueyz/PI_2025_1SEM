@@ -13,6 +13,7 @@ def get_media():
     situacao_media_litros = avaliar(media_agua_bd, 150, 200)
     situacao_media_kwh = avaliar(media_energia_bd, 5, 10)
     situacao_media_resid = avaliar(porc_media_bd, 20, 50)
+    
 
     print("=" * 60)
     print(f"Média Geral da água: {media_agua_bd:.2f} L")

@@ -6,7 +6,7 @@ from funcions.post import cadastro
 from funcions.get import listar
 from funcions.get_media import get_media
 from funcions.delete import delete
-from funcions.put import alterar_registro  # Importa a função aqui
+from funcions.put import alterar_registro  
 
 
 def what_more():

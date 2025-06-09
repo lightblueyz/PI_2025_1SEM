@@ -1,5 +1,6 @@
 import os
 from db.server import cursor, conn
+from criptografia.Criptografia import Cypher
 from funcions.assessment import avaliar
 from funcions.updatemedia import update_media
 from funcions.validacao_transporte import (
@@ -16,8 +17,6 @@ from funcions.validacao_parametros import (
     kgn_val,
     kgr_val
 )
-
-
 
 
 os.system("cls")
@@ -92,7 +91,8 @@ def cadastro(date):
     situacaokwh = avaliar(KWh, 5, 10)
     situacaoporc = avaliar(porc, 20, 50)
 
-    situacao_geral = 0
+    
+
 
     insert_data = """
         INSERT INTO sustentabilidade (
@@ -107,19 +107,27 @@ def cadastro(date):
 
     ultimo_id = cursor.lastrowid
 
+    originallitros = situacaolitros
+    litroscripto = Cypher(originallitros)
+    originalenergia = situacaokwh
+    energiacripto = Cypher(originalenergia)
+    originalresiduos = situacaoporc
+    residuoscripto = Cypher(originalresiduos)
+    originaltrans = situation
+    transcripto = Cypher(originaltrans)
+
     insert_status = """
         INSERT INTO status (
-            id_data, sit_ener, sit_agua, sit_resid, sit_tran, sit_geral
-        ) VALUES (%s, %s, %s, %s, %s, %s)
+            id_data, sit_ener, sit_agua, sit_resid, sit_tran
+        ) VALUES (%s, %s, %s, %s, %s)
     """
 
     status_values = (
         ultimo_id,
-        situacaokwh,
-        situacaolitros,
-        situacaoporc,
-        situation,
-        situacao_geral,
+        energiacripto,
+        litroscripto,
+        residuoscripto,
+        transcripto,
     )
 
     cursor.execute(insert_status, status_values)
@@ -156,7 +164,7 @@ def cadastro(date):
         porc_media = (media_residuosNR * 100) / soma_media
     else:
         porc_media = 0
-    
+    print("Dados cadastrados com sucesso!")
     update_media()
 
     return ultimo_id, media_agua, media_energia, porc_media

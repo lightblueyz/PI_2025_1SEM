@@ -54,24 +54,3 @@ def Decypher(texto):
         return descriptografado
 
 
-# --- TESTE INTERATIVO ---
-while True:
-    print("\n--- MENU ---")
-    print("1. Criptografar")
-    print("2. Descriptografar")
-    print("3. Sair")
-    opcao = input("Escolha uma opção: ")
-
-    if opcao == "1":
-        original = input("Digite o texto ou número para criptografar: ")
-        cripto = Cypher(original)
-        print(f"Criptografado: {cripto}")
-    elif opcao == "2":
-        cifrado = input("Digite o texto criptografado: ")
-        decripto = Decypher(cifrado)
-        print(f"Descriptografado: {decripto}")
-    elif opcao == "3":
-        print("Saindo...")
-        break
-    else:
-        print("Opção inválida. Tente novamente.")

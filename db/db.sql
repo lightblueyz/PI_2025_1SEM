@@ -29,7 +29,6 @@ CREATE TABLE status (
     sit_agua VARCHAR(50),
     sit_resid VARCHAR(50),
     sit_tran VARCHAR(50),
-    sit_geral VARCHAR(50),
     CONSTRAINT fk_id FOREIGN KEY (id_data) REFERENCES sustentabilidade(id)
 );
 
