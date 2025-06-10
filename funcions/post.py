@@ -1,9 +1,9 @@
 import os
 from db.server import cursor, conn
 from criptografia.Criptografia import Cypher
-from funcions.assessment import avaliar
-from funcions.updatemedia import update_media
-from funcions.validacao_transporte import (
+from funcions.functions_spacifics.assessment import avaliar
+from funcions.functions_spacifics.updatemedia import update_media
+from funcions.functions_spacifics.validacao_transporte import (
     tp_val,
     bk_val,
     cm_val,
@@ -11,7 +11,7 @@ from funcions.validacao_transporte import (
     cre_val,
     crn_val,
 )
-from funcions.validacao_parametros import (
+from funcions.functions_spacifics.validacao_parametros import (
     litros_val,
     kwh_val,
     kgn_val,

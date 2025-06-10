@@ -2,7 +2,7 @@ import os
 import time
 from criptografia.Criptografia import Cypher
 from db.server import conn, cursor
-from funcions.assessment import avaliar
+from funcions.functions_spacifics.assessment import avaliar
 
 
 def verificar_id_existe(id_):

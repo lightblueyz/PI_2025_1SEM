@@ -1,5 +1,5 @@
 from db.server import cursor, conn
-from funcions.updatemedia import update_media
+from funcions.functions_spacifics.updatemedia import update_media
 
 def delete():
 

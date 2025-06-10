@@ -1,4 +1,4 @@
-from funcions.assessment import avaliar
+from funcions.functions_spacifics.assessment import avaliar
 from db.server import conn
 
 def get_media():
